@@ -1,10 +1,9 @@
 // importing
-// const express = require('express')
-// const mongoose = require('mongoose')
 import Pusher from 'pusher'
 import express from 'express'
 import mongoose from 'mongoose'
 import Messages from './dbMessage.js'
+import cors from 'cors'
 // app config
 const app = express();
 const port = process.env.PORT || 9000;
@@ -20,6 +19,8 @@ const pusher = new Pusher({
 // middleware
 
 app.use(express.json())
+app.use(cors())
+
 
 // DB config
 const connection_url = 'mongodb+srv://Random:PiL6q3ZHixD9Iur0@cluster0.m06he.mongodb.net/msgappdb?retryWrites=true&w=majority'
@@ -45,7 +46,7 @@ db.once('open', () => {
             const messageDetails = change.fullDocument
             pusher.trigger('messages', 'inserted',
                 {
-                    name: messageDetails.user,
+                    name: messageDetails.name,
                     message: messageDetails.message
                 }
             )
